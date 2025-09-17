@@ -35,10 +35,44 @@ export interface GuildConfig {
   goodbyeMessage?: string;
   // Prefix system
   prefix: string;
-  // Embed customization
+  // General embed customization
   embedColor: string;
   embedThumbnail?: string;
   embedFooter?: string;
+  // Welcome embed customization
+  welcomeEmbedEnabled?: boolean;
+  welcomeEmbedColor?: string;
+  welcomeEmbedThumbnail?: string;
+  welcomeEmbedFooter?: string;
+  welcomeEmbedImage?: string;
+  welcomeEmbedTitle?: string;
+  // Farewell embed customization
+  goodbyeEmbedEnabled?: boolean;
+  goodbyeEmbedColor?: string;
+  goodbyeEmbedThumbnail?: string;
+  goodbyeEmbedFooter?: string;
+  goodbyeEmbedImage?: string;
+  goodbyeEmbedTitle?: string;
+  // Verification embed customization
+  verificationEmbedEnabled?: boolean;
+  verificationEmbedColor?: string;
+  verificationEmbedThumbnail?: string;
+  verificationEmbedFooter?: string;
+  verificationEmbedImage?: string;
+  verificationEmbedTitle?: string;
+  verificationDmMessage?: string;
+  verificationDmEmbedEnabled?: boolean;
+  verificationDmEmbedColor?: string;
+  verificationDmEmbedThumbnail?: string;
+  verificationDmEmbedFooter?: string;
+  verificationDmEmbedImage?: string;
+  // Autorole embed customization
+  autoRoleEmbedEnabled?: boolean;
+  autoRoleEmbedColor?: string;
+  autoRoleEmbedThumbnail?: string;
+  autoRoleEmbedFooter?: string;
+  autoRoleEmbedImage?: string;
+  autoRoleEmbedTitle?: string;
   // Timestamps
   createdAt: Date;
   updatedAt: Date;

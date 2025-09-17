@@ -29,10 +29,44 @@ export const guildConfigs = pgTable('guild_configs', {
   goodbyeMessage: text('goodbye_message'),
   // Prefix system
   prefix: text('prefix').default('!'),
-  // Embed customization
+  // General embed customization
   embedColor: text('embed_color').default('#0099ff'),
   embedThumbnail: text('embed_thumbnail'),
   embedFooter: text('embed_footer'),
+  // Welcome embed customization
+  welcomeEmbedEnabled: boolean('welcome_embed_enabled').default(true),
+  welcomeEmbedColor: text('welcome_embed_color').default('#00ff00'),
+  welcomeEmbedThumbnail: text('welcome_embed_thumbnail'),
+  welcomeEmbedFooter: text('welcome_embed_footer'),
+  welcomeEmbedImage: text('welcome_embed_image'),
+  welcomeEmbedTitle: text('welcome_embed_title'),
+  // Farewell embed customization
+  goodbyeEmbedEnabled: boolean('goodbye_embed_enabled').default(true),
+  goodbyeEmbedColor: text('goodbye_embed_color').default('#ff4444'),
+  goodbyeEmbedThumbnail: text('goodbye_embed_thumbnail'),
+  goodbyeEmbedFooter: text('goodbye_embed_footer'),
+  goodbyeEmbedImage: text('goodbye_embed_image'),
+  goodbyeEmbedTitle: text('goodbye_embed_title'),
+  // Verification embed customization
+  verificationEmbedEnabled: boolean('verification_embed_enabled').default(true),
+  verificationEmbedColor: text('verification_embed_color').default('#0099ff'),
+  verificationEmbedThumbnail: text('verification_embed_thumbnail'),
+  verificationEmbedFooter: text('verification_embed_footer'),
+  verificationEmbedImage: text('verification_embed_image'),
+  verificationEmbedTitle: text('verification_embed_title'),
+  verificationDmMessage: text('verification_dm_message'),
+  verificationDmEmbedEnabled: boolean('verification_dm_embed_enabled').default(true),
+  verificationDmEmbedColor: text('verification_dm_embed_color').default('#00aaff'),
+  verificationDmEmbedThumbnail: text('verification_dm_embed_thumbnail'),
+  verificationDmEmbedFooter: text('verification_dm_embed_footer'),
+  verificationDmEmbedImage: text('verification_dm_embed_image'),
+  // Autorole embed customization
+  autoRoleEmbedEnabled: boolean('auto_role_embed_enabled').default(true),
+  autoRoleEmbedColor: text('auto_role_embed_color').default('#aa55ff'),
+  autoRoleEmbedThumbnail: text('auto_role_embed_thumbnail'),
+  autoRoleEmbedFooter: text('auto_role_embed_footer'),
+  autoRoleEmbedImage: text('auto_role_embed_image'),
+  autoRoleEmbedTitle: text('auto_role_embed_title'),
   // Timestamps
   createdAt: timestamp('created_at').defaultNow(),
   updatedAt: timestamp('updated_at').defaultNow()
