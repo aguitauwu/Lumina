@@ -517,6 +517,129 @@ export class PrefixCommandHandler {
         await message.reply({ embeds: [embed] });
       }
     });
+
+    // Images command
+    this.commands.set('imagenes', {
+      name: 'imagenes',
+      description: 'Configurar imágenes para embeds de bienvenida y despedida',
+      usage: 'imagenes <bienvenida/despedida> [URL/{user_avatar}/{server_icon}/remove] o adjunta una imagen',
+      permissions: ['Administrator'],
+      execute: async (message: Message, args: string[]) => {
+        if (!message.member?.permissions.has('Administrator')) {
+          await message.reply('❌ No tienes permisos de administrador.');
+          return;
+        }
+
+        if (!args[0] || !['bienvenida', 'despedida', 'welcome', 'goodbye'].includes(args[0].toLowerCase())) {
+          await message.reply('❌ Uso: `imagenes <bienvenida/despedida> <imagen>`\n\n' +
+            '**Opciones de imagen:**\n' +
+            '• **Adjuntar imagen** - Sube una imagen desde tu galería\n' +
+            '• `URL` - URL de imagen personalizada\n' +
+            '• `{user_avatar}` - Avatar del usuario que se une/sale\n' +
+            '• `{server_icon}` - Icono del servidor\n' +
+            '• `remove` - Eliminar imagen\n\n' +
+            '**Ejemplos:**\n' +
+            '`imagenes bienvenida {user_avatar}`\n' +
+            '`imagenes despedida https://imagen.com/fondo.png`\n' +
+            'O adjunta una imagen al mensaje');
+          return;
+        }
+
+        const type = ['bienvenida', 'welcome'].includes(args[0].toLowerCase()) ? 'welcome' : 'goodbye';
+        let imageValue = args.slice(1).join(' ');
+
+        // Check if there's an attachment (uploaded image)
+        const attachment = message.attachments.first();
+        if (attachment && this.isImageAttachment(attachment)) {
+          imageValue = attachment.url;
+        }
+
+        if (!imageValue) {
+          await message.reply('❌ Debes especificar una imagen, placeholder o adjuntar una imagen.');
+          return;
+        }
+
+        // Validate URL if not using placeholders or remove
+        if (imageValue !== 'remove' && 
+            imageValue !== '{user_avatar}' && 
+            imageValue !== '{server_icon}' && 
+            !this.isValidUrl(imageValue)) {
+          await message.reply('❌ La URL proporcionada no es válida.');
+          return;
+        }
+
+        const configField = type === 'welcome' ? 'welcomeEmbedImage' : 'goodbyeEmbedImage';
+        const updates = {
+          [configField]: imageValue === 'remove' ? null : imageValue
+        };
+
+        await this.client.db.updateGuildConfig(message.guildId!, updates);
+
+        let description = '';
+        if (imageValue === 'remove') {
+          description = `✅ Imagen de ${type === 'welcome' ? 'bienvenida' : 'despedida'} eliminada.`;
+        } else if (imageValue === '{user_avatar}') {
+          description = `✅ Ahora se usará el **avatar del usuario** como imagen de ${type === 'welcome' ? 'bienvenida' : 'despedida'}.`;
+        } else if (imageValue === '{server_icon}') {
+          description = `✅ Ahora se usará el **icono del servidor** como imagen de ${type === 'welcome' ? 'bienvenida' : 'despedida'}.`;
+        } else if (attachment) {
+          description = `✅ **Imagen subida desde tu galería** configurada para ${type === 'welcome' ? 'bienvenidas' : 'despedidas'}.\n🖼️ La imagen se mostrará en todos los mensajes de ${type === 'welcome' ? 'bienvenida' : 'despedida'}.`;
+        } else {
+          description = `✅ **Imagen personalizada** configurada para ${type === 'welcome' ? 'bienvenidas' : 'despedidas'}.`;
+        }
+
+        const config = await this.client.db.getGuildConfig(message.guildId!);
+        const embed = EmbedUtils.success(
+          'Imagen Configurada',
+          description,
+          config || undefined
+        );
+
+        // Create preview embed
+        let previewImageUrl = '';
+        if (imageValue === '{user_avatar}' && message.member) {
+          previewImageUrl = message.member.user.displayAvatarURL({ size: 512 });
+        } else if (imageValue === '{server_icon}' && message.guild) {
+          previewImageUrl = message.guild.iconURL({ size: 512 }) || '';
+        } else if (imageValue !== 'remove') {
+          previewImageUrl = imageValue;
+        }
+
+        // Show preview if we have an image
+        if (previewImageUrl) {
+          embed.setImage(previewImageUrl);
+        }
+
+        await message.reply({ embeds: [embed] });
+      }
+    });
+  }
+
+  private isValidUrl(string: string): boolean {
+    try {
+      const url = new URL(string);
+      return url.protocol === 'http:' || url.protocol === 'https:';
+    } catch (_) {
+      return false;
+    }
+  }
+
+  private isImageAttachment(attachment: any): boolean {
+    // Check content type first
+    if (attachment.contentType?.startsWith('image/')) {
+      return true;
+    }
+    
+    // Fallback to extension check
+    const imageExtensions = ['.png', '.jpg', '.jpeg', '.gif', '.webp', '.bmp'];
+    const fileName = attachment.name?.toLowerCase() || '';
+    
+    if (imageExtensions.some(ext => fileName.endsWith(ext))) {
+      return true;
+    }
+    
+    // Fallback to checking if it has width (Discord images have this property)
+    return attachment.width != null;
   }
 
   async handleMessage(message: Message) {

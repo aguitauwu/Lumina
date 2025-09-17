@@ -99,7 +99,10 @@ export class EmbedUtils {
     if (thumbnailUrl) {
       if (thumbnailUrl.includes('{user_avatar}') && member) {
         embed.setThumbnail(member.user.displayAvatarURL({ size: 256 }));
-      } else if (!thumbnailUrl.includes('{user_avatar}')) {
+      } else if (thumbnailUrl.includes('{server_icon}') && member) {
+        const serverIcon = member.guild.iconURL({ size: 256 });
+        if (serverIcon) embed.setThumbnail(serverIcon);
+      } else if (!thumbnailUrl.includes('{user_avatar}') && !thumbnailUrl.includes('{server_icon}')) {
         embed.setThumbnail(thumbnailUrl);
       }
     }
@@ -108,7 +111,10 @@ export class EmbedUtils {
     if (config?.welcomeEmbedImage) {
       if (config.welcomeEmbedImage.includes('{user_avatar}') && member) {
         embed.setImage(member.user.displayAvatarURL({ size: 512 }));
-      } else if (!config.welcomeEmbedImage.includes('{user_avatar}')) {
+      } else if (config.welcomeEmbedImage.includes('{server_icon}') && member) {
+        const serverIcon = member.guild.iconURL({ size: 512 });
+        if (serverIcon) embed.setImage(serverIcon);
+      } else if (!config.welcomeEmbedImage.includes('{user_avatar}') && !config.welcomeEmbedImage.includes('{server_icon}')) {
         embed.setImage(config.welcomeEmbedImage);
       }
     }
@@ -135,7 +141,10 @@ export class EmbedUtils {
     if (thumbnailUrl) {
       if (thumbnailUrl.includes('{user_avatar}') && member) {
         embed.setThumbnail(member.user.displayAvatarURL({ size: 256 }));
-      } else if (!thumbnailUrl.includes('{user_avatar}')) {
+      } else if (thumbnailUrl.includes('{server_icon}') && member) {
+        const serverIcon = member.guild.iconURL({ size: 256 });
+        if (serverIcon) embed.setThumbnail(serverIcon);
+      } else if (!thumbnailUrl.includes('{user_avatar}') && !thumbnailUrl.includes('{server_icon}')) {
         embed.setThumbnail(thumbnailUrl);
       }
     }
@@ -144,7 +153,10 @@ export class EmbedUtils {
     if (config?.goodbyeEmbedImage) {
       if (config.goodbyeEmbedImage.includes('{user_avatar}') && member) {
         embed.setImage(member.user.displayAvatarURL({ size: 512 }));
-      } else if (!config.goodbyeEmbedImage.includes('{user_avatar}')) {
+      } else if (config.goodbyeEmbedImage.includes('{server_icon}') && member) {
+        const serverIcon = member.guild.iconURL({ size: 512 });
+        if (serverIcon) embed.setImage(serverIcon);
+      } else if (!config.goodbyeEmbedImage.includes('{user_avatar}') && !config.goodbyeEmbedImage.includes('{server_icon}')) {
         embed.setImage(config.goodbyeEmbedImage);
       }
     }
