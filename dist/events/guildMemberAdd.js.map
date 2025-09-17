@@ -1,0 +1,1 @@
+{"version":3,"file":"guildMemberAdd.js","sourceRoot":"","sources":["../../src/events/guildMemberAdd.ts"],"names":[],"mappings":";;AAAA,2CAAiD;AAGjD,kBAAe;IACb,IAAI,EAAE,mBAAM,CAAC,cAAc;IAC3B,KAAK,CAAC,OAAO,CAAC,MAAmB;QAC/B,MAAM,MAAM,GAAG,MAAM,CAAC,MAAwB,CAAC;QAC/C,MAAM,mBAAmB,GAAI,MAAc,CAAC,mBAAmB,CAAC;QAEhE,MAAM,mBAAmB,CAAC,gBAAgB,CAAC,MAAM,CAAC,CAAC;IACrD,CAAC;CACF,CAAC"}

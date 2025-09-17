@@ -1,0 +1,33 @@
+{
+  "name": "lumina-discord-bot",
+  "version": "1.0.0",
+  "description": "A comprehensive Discord bot with verification systems, auto-roles, and PostgreSQL integration",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "tsx watch src/index.ts",
+    "db:generate": "drizzle-kit generate",
+    "db:push": "drizzle-kit push"
+  },
+  "keywords": ["discord", "bot", "typescript", "verification", "autoroles"],
+  "author": "Lumina Bot Team",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0",
+    "tsx": "^4.0.0"
+  },
+  "dependencies": {
+    "discord.js": "^14.14.1",
+    "drizzle-orm": "^0.29.0",
+    "drizzle-kit": "^0.20.0",
+    "pg": "^8.11.0",
+    "@types/pg": "^8.10.0",
+    "winston": "^3.11.0",
+    "winston-daily-rotate-file": "^4.7.1",
+    "zod": "^3.22.0",
+    "dotenv": "^16.3.0",
+    "cross-env": "^7.0.3"
+  }
+}
