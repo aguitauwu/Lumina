@@ -23,8 +23,15 @@
     "discord",
     "bot",
     "typescript",
+    "spanish",
     "verification",
-    "autoroles"
+    "autoroles",
+    "welcome",
+    "goodbye",
+    "embeds",
+    "postgresql",
+    "mongodb",
+    "lumina"
   ],
   "author": "Lumina Bot Team",
   "license": "MIT",
