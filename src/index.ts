@@ -2,7 +2,7 @@ import { Client, GatewayIntentBits, Partials, REST, Routes, Collection } from 'd
 import { config } from 'dotenv';
 import { readdir } from 'fs/promises';
 import { join } from 'path';
-import { DatabaseManager } from './database/connection';
+import { SmartDatabaseManager } from './database/smart-manager';
 import { createLogger } from './utils/logger';
 import { AutoRoleHandler } from './handlers/autoroles';
 import { VerificationHandler } from './handlers/verification';
@@ -49,7 +49,7 @@ async function main() {
     console.log('🚀 Iniciando Lumina Bot...');
     
     client.logger = createLogger('LuminaBot');
-    client.db = new DatabaseManager();
+    client.db = new SmartDatabaseManager();
     
     // Initialize handlers
     const autoRoleHandler = new AutoRoleHandler(client);

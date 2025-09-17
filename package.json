@@ -1,14 +1,23 @@
 {
   "name": "lumina-discord-bot",
   "version": "1.0.0",
-  "description": "A comprehensive Discord bot with verification systems, auto-roles, and PostgreSQL integration",
+  "description": "Bot de Discord completo con sistemas de verificación, bienvenidas personalizables, autoroles, embeds avanzados y soporte multi-base de datos (PostgreSQL, MongoDB, almacenamiento local)",
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc",
-    "start": "node dist/index.js",
-    "dev": "tsx watch src/index.ts",
+    "start": "node dist/index.js", 
+    "dev": "cross-env NODE_ENV=development tsx watch src/index.ts",
+    "dev:windows": "set NODE_ENV=development && tsx watch src/index.ts",
+    "dev:unix": "NODE_ENV=development tsx watch src/index.ts",
     "db:generate": "drizzle-kit generate",
-    "db:push": "drizzle-kit push:pg"
+    "db:push": "drizzle-kit push:pg",
+    "db:studio": "drizzle-kit studio",
+    "backup": "node -e \"const { SmartDatabaseManager } = require('./dist/database/smart-manager'); const db = new SmartDatabaseManager(); db.createBackup().then(console.log).catch(console.error);\"",
+    "health": "node -e \"const { SmartDatabaseManager } = require('./dist/database/smart-manager'); const db = new SmartDatabaseManager(); db.init().then(() => db.healthCheck()).then(console.log).catch(console.error);\"",
+    "postinstall": "npm run build",
+    "clean": "cross-env rm -rf dist && rm -rf node_modules/.cache",
+    "lint": "echo 'Linting not configured yet'",
+    "test": "echo 'Tests not configured yet'"
   },
   "keywords": [
     "discord",
