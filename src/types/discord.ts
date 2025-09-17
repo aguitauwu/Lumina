@@ -1,9 +1,9 @@
 import { Client } from 'discord.js';
-import { DatabaseManager } from '../database/connection';
+import { SmartDatabaseManager } from '../database/smart-manager';
 import { Logger } from 'winston';
 
 export interface ExtendedClient extends Client {
-  db: DatabaseManager;
+  db: SmartDatabaseManager;
   logger: Logger;
 }
 
