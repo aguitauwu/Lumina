@@ -25,6 +25,21 @@ export default {
           case 'config':
             command = await import('../commands/config');
             break;
+          case 'setup-welcome':
+            command = await import('../commands/setup-welcome');
+            break;
+          case 'setup-goodbye':
+            command = await import('../commands/setup-goodbye');
+            break;
+          case 'set-prefix':
+            command = await import('../commands/set-prefix');
+            break;
+          case 'unverified-list':
+            command = await import('../commands/unverified-list');
+            break;
+          case 'customize-embeds':
+            command = await import('../commands/customize-embeds');
+            break;
           default:
             return;
         }

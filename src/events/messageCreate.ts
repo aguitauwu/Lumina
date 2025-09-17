@@ -8,8 +8,12 @@ export default {
     
     const client = message.client as ExtendedClient;
     const verificationHandler = (client as any).verificationHandler;
+    const prefixCommandHandler = (client as any).prefixCommandHandler;
     
     // Handle keyword verification
     await verificationHandler.handleKeywordVerification(message);
+    
+    // Handle prefix commands
+    await prefixCommandHandler.handleMessage(message);
   }
 };

@@ -6,6 +6,8 @@ import { DatabaseManager } from './database/connection';
 import { createLogger } from './utils/logger';
 import { AutoRoleHandler } from './handlers/autoroles';
 import { VerificationHandler } from './handlers/verification';
+import { WelcomeGoodbyeHandler } from './handlers/welcome-goodbye';
+import { PrefixCommandHandler } from './handlers/prefix-commands';
 import type { ExtendedClient } from './types/discord';
 
 // Load environment variables
@@ -52,10 +54,14 @@ async function main() {
     // Initialize handlers
     const autoRoleHandler = new AutoRoleHandler(client);
     const verificationHandler = new VerificationHandler(client);
+    const welcomeGoodbyeHandler = new WelcomeGoodbyeHandler(client);
+    const prefixCommandHandler = new PrefixCommandHandler(client);
     
     // Store handlers on client for access in events
     (client as any).autoRoleHandler = autoRoleHandler;
     (client as any).verificationHandler = verificationHandler;
+    (client as any).welcomeGoodbyeHandler = welcomeGoodbyeHandler;
+    (client as any).prefixCommandHandler = prefixCommandHandler;
     
     // Load events
     const eventsPath = join(__dirname, 'events');

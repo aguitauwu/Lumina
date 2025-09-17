@@ -3,6 +3,7 @@ import type { AutoRole } from '../types/discord';
 
 export const guildConfigs = pgTable('guild_configs', {
   guildId: text('guild_id').primaryKey(),
+  // Verification system
   verificationEnabled: boolean('verification_enabled').default(false),
   verificationMethod: text('verification_method').$type<'emoji' | 'keyword' | 'button'>(),
   verificationChannelId: text('verification_channel_id'),
@@ -10,10 +11,29 @@ export const guildConfigs = pgTable('guild_configs', {
   verificationMessage: text('verification_message'),
   verificationKeyword: text('verification_keyword'),
   verificationEmoji: text('verification_emoji'),
+  // Auto-roles system
   autoRoles: jsonb('auto_roles').$type<AutoRole[]>().default([]),
   autoRoleMessageId: text('auto_role_message_id'),
+  // Auto-ban system
   autoBanEnabled: boolean('auto_ban_enabled').default(false),
   autoBanDelayHours: integer('auto_ban_delay_hours').default(24),
+  // Welcome system
+  welcomeEnabled: boolean('welcome_enabled').default(false),
+  welcomeChannelId: text('welcome_channel_id'),
+  welcomeMessage: text('welcome_message'),
+  welcomeDmEnabled: boolean('welcome_dm_enabled').default(true),
+  welcomeDmMessage: text('welcome_dm_message'),
+  // Goodbye system
+  goodbyeEnabled: boolean('goodbye_enabled').default(false),
+  goodbyeChannelId: text('goodbye_channel_id'),
+  goodbyeMessage: text('goodbye_message'),
+  // Prefix system
+  prefix: text('prefix').default('!'),
+  // Embed customization
+  embedColor: text('embed_color').default('#0099ff'),
+  embedThumbnail: text('embed_thumbnail'),
+  embedFooter: text('embed_footer'),
+  // Timestamps
   createdAt: timestamp('created_at').defaultNow(),
   updatedAt: timestamp('updated_at').defaultNow()
 });

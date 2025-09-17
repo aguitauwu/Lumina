@@ -2,16 +2,11 @@ import { Events, GuildMember } from 'discord.js';
 import { ExtendedClient } from '../types/discord';
 
 export default {
-  name: Events.GuildMemberAdd,
+  name: Events.GuildMemberRemove,
   async execute(member: GuildMember) {
     const client = member.client as ExtendedClient;
-    const verificationHandler = (client as any).verificationHandler;
     const welcomeGoodbyeHandler = (client as any).welcomeGoodbyeHandler;
     
-    // Handle verification system
-    await verificationHandler.handleMemberJoin(member);
-    
-    // Handle welcome messages  
-    await welcomeGoodbyeHandler.handleMemberJoin(member);
+    await welcomeGoodbyeHandler.handleMemberLeave(member);
   }
 };
