@@ -55,15 +55,33 @@ export async function execute(interaction: ChatInputCommandInteraction) {
     const members = await guild.members.fetch();
     const cutoffTime = Date.now() - (hours * 60 * 60 * 1000);
     
+    // Debug logging
+    console.log(`Total members fetched: ${members.size}`);
+    console.log(`Verification role ID: ${config.verificationRoleId}`);
+    console.log(`Cutoff time: ${new Date(cutoffTime).toISOString()}`);
+    
+    let debugCount = 0;
     const unverifiedMembers = members
       .filter(member => {
-        if (member.user.bot) return false;
-        if (member.roles.cache.has(config.verificationRoleId!)) return false;
-        if (member.joinedTimestamp && member.joinedTimestamp < cutoffTime) return false;
+        const isBot = member.user.bot;
+        const hasVerificationRole = member.roles.cache.has(config.verificationRoleId!);
+        const joinedBeforeCutoff = member.joinedTimestamp && member.joinedTimestamp < cutoffTime;
+        
+        // Debug logging for first few members
+        if (debugCount < 5) {
+          console.log(`Member ${member.user.tag}: bot=${isBot}, hasRole=${hasVerificationRole}, joinedBefore=${joinedBeforeCutoff}, joinedAt=${member.joinedTimestamp ? new Date(member.joinedTimestamp).toISOString() : 'unknown'}`);
+          debugCount++;
+        }
+        
+        if (isBot) return false;
+        if (hasVerificationRole) return false;
+        if (joinedBeforeCutoff) return false;
         return true;
       })
       .sort((a, b) => (a.joinedTimestamp || 0) - (b.joinedTimestamp || 0))
       .first(limit);
+      
+    console.log(`Unverified members found: ${unverifiedMembers.length}`);
 
     if (unverifiedMembers.length === 0) {
       return interaction.editReply({
@@ -80,7 +98,7 @@ export async function execute(interaction: ChatInputCommandInteraction) {
       .setTitle(`👥 Usuarios No Verificados (${unverifiedMembers.length})`)
       .setDescription(`Usuarios que se unieron en las últimas ${hours} horas`)
       .setTimestamp()
-      .setFooter({ text: `Mostrando ${unverifiedMembers.length} de ${members.size - members.filter(m => m.user.bot).size} miembros` });
+      .setFooter({ text: `Mostrando ${unverifiedMembers.length} de ${members.filter(m => !m.user.bot).size} miembros` });
 
     let description = '';
     unverifiedMembers.forEach((member, index) => {
