@@ -86,20 +86,21 @@ export class EmbedUtils {
     return embed;
   }
 
-  // Welcome embed with specific customization
+  // Welcome embed with specific customization and fallbacks
   static welcome(title: string, description: string, config: GuildConfig, member?: GuildMember): EmbedBuilder {
     const embed = new EmbedBuilder()
-      .setColor((config?.welcomeEmbedColor as ColorResolvable) || '#00ff00')
+      .setColor((config?.welcomeEmbedColor || config?.embedColor || '#00ff00') as ColorResolvable)
       .setTitle(config?.welcomeEmbedTitle || `🎉 ${title}`)
       .setDescription(description)
       .setTimestamp();
 
-    // Handle thumbnail
-    if (config?.welcomeEmbedThumbnail) {
-      if (config.welcomeEmbedThumbnail.includes('{user_avatar}') && member) {
+    // Handle thumbnail with fallback to general setting
+    const thumbnailUrl = config?.welcomeEmbedThumbnail || config?.embedThumbnail;
+    if (thumbnailUrl) {
+      if (thumbnailUrl.includes('{user_avatar}') && member) {
         embed.setThumbnail(member.user.displayAvatarURL({ size: 256 }));
-      } else if (!config.welcomeEmbedThumbnail.includes('{user_avatar}')) {
-        embed.setThumbnail(config.welcomeEmbedThumbnail);
+      } else if (!thumbnailUrl.includes('{user_avatar}')) {
+        embed.setThumbnail(thumbnailUrl);
       }
     }
 
@@ -112,28 +113,30 @@ export class EmbedUtils {
       }
     }
 
-    // Handle footer
-    if (config?.welcomeEmbedFooter) {
-      embed.setFooter({ text: config.welcomeEmbedFooter });
+    // Handle footer with fallback to general setting
+    const footerText = config?.welcomeEmbedFooter || config?.embedFooter;
+    if (footerText) {
+      embed.setFooter({ text: footerText });
     }
 
     return embed;
   }
 
-  // Farewell embed with specific customization
+  // Farewell embed with specific customization and fallbacks
   static farewell(title: string, description: string, config: GuildConfig, member?: GuildMember): EmbedBuilder {
     const embed = new EmbedBuilder()
-      .setColor((config?.goodbyeEmbedColor as ColorResolvable) || '#ff4444')
+      .setColor((config?.goodbyeEmbedColor || config?.embedColor || '#ff4444') as ColorResolvable)
       .setTitle(config?.goodbyeEmbedTitle || `👋 ${title}`)
       .setDescription(description)
       .setTimestamp();
 
-    // Handle thumbnail
-    if (config?.goodbyeEmbedThumbnail) {
-      if (config.goodbyeEmbedThumbnail.includes('{user_avatar}') && member) {
+    // Handle thumbnail with fallback to general setting
+    const thumbnailUrl = config?.goodbyeEmbedThumbnail || config?.embedThumbnail;
+    if (thumbnailUrl) {
+      if (thumbnailUrl.includes('{user_avatar}') && member) {
         embed.setThumbnail(member.user.displayAvatarURL({ size: 256 }));
-      } else if (!config.goodbyeEmbedThumbnail.includes('{user_avatar}')) {
-        embed.setThumbnail(config.goodbyeEmbedThumbnail);
+      } else if (!thumbnailUrl.includes('{user_avatar}')) {
+        embed.setThumbnail(thumbnailUrl);
       }
     }
 
@@ -146,28 +149,30 @@ export class EmbedUtils {
       }
     }
 
-    // Handle footer
-    if (config?.goodbyeEmbedFooter) {
-      embed.setFooter({ text: config.goodbyeEmbedFooter });
+    // Handle footer with fallback to general setting
+    const footerText = config?.goodbyeEmbedFooter || config?.embedFooter;
+    if (footerText) {
+      embed.setFooter({ text: footerText });
     }
 
     return embed;
   }
 
-  // Verification embed with specific customization
+  // Verification embed with specific customization and fallbacks
   static verification(title: string, description: string, config: GuildConfig, member?: GuildMember): EmbedBuilder {
     const embed = new EmbedBuilder()
-      .setColor((config?.verificationEmbedColor as ColorResolvable) || '#0099ff')
+      .setColor((config?.verificationEmbedColor || config?.embedColor || '#0099ff') as ColorResolvable)
       .setTitle(config?.verificationEmbedTitle || `🔐 ${title}`)
       .setDescription(description)
       .setTimestamp();
 
-    // Handle thumbnail
-    if (config?.verificationEmbedThumbnail) {
-      if (config.verificationEmbedThumbnail.includes('{user_avatar}') && member) {
+    // Handle thumbnail with fallback to general setting
+    const thumbnailUrl = config?.verificationEmbedThumbnail || config?.embedThumbnail;
+    if (thumbnailUrl) {
+      if (thumbnailUrl.includes('{user_avatar}') && member) {
         embed.setThumbnail(member.user.displayAvatarURL({ size: 256 }));
-      } else if (!config.verificationEmbedThumbnail.includes('{user_avatar}')) {
-        embed.setThumbnail(config.verificationEmbedThumbnail);
+      } else if (!thumbnailUrl.includes('{user_avatar}')) {
+        embed.setThumbnail(thumbnailUrl);
       }
     }
 
@@ -180,28 +185,30 @@ export class EmbedUtils {
       }
     }
 
-    // Handle footer
-    if (config?.verificationEmbedFooter) {
-      embed.setFooter({ text: config.verificationEmbedFooter });
+    // Handle footer with fallback to general setting
+    const footerText = config?.verificationEmbedFooter || config?.embedFooter;
+    if (footerText) {
+      embed.setFooter({ text: footerText });
     }
 
     return embed;
   }
 
-  // Verification DM embed with specific customization
+  // Verification DM embed with specific customization and fallbacks
   static verificationDM(title: string, description: string, config: GuildConfig, member?: GuildMember): EmbedBuilder {
     const embed = new EmbedBuilder()
-      .setColor((config?.verificationDmEmbedColor as ColorResolvable) || '#00aaff')
+      .setColor((config?.verificationDmEmbedColor || config?.embedColor || '#00aaff') as ColorResolvable)
       .setTitle(`🔐 ${title}`)
       .setDescription(description)
       .setTimestamp();
 
-    // Handle thumbnail
-    if (config?.verificationDmEmbedThumbnail) {
-      if (config.verificationDmEmbedThumbnail.includes('{user_avatar}') && member) {
+    // Handle thumbnail with fallback to general setting
+    const thumbnailUrl = config?.verificationDmEmbedThumbnail || config?.embedThumbnail;
+    if (thumbnailUrl) {
+      if (thumbnailUrl.includes('{user_avatar}') && member) {
         embed.setThumbnail(member.user.displayAvatarURL({ size: 256 }));
-      } else if (!config.verificationDmEmbedThumbnail.includes('{user_avatar}')) {
-        embed.setThumbnail(config.verificationDmEmbedThumbnail);
+      } else if (!thumbnailUrl.includes('{user_avatar}')) {
+        embed.setThumbnail(thumbnailUrl);
       }
     }
 
@@ -214,25 +221,27 @@ export class EmbedUtils {
       }
     }
 
-    // Handle footer
-    if (config?.verificationDmEmbedFooter) {
-      embed.setFooter({ text: config.verificationDmEmbedFooter });
+    // Handle footer with fallback to general setting
+    const footerText = config?.verificationDmEmbedFooter || config?.embedFooter;
+    if (footerText) {
+      embed.setFooter({ text: footerText });
     }
 
     return embed;
   }
 
-  // Autorole embed with specific customization
+  // Autorole embed with specific customization and fallbacks
   static autorole(title: string, description: string, config: GuildConfig): EmbedBuilder {
     const embed = new EmbedBuilder()
-      .setColor((config?.autoRoleEmbedColor as ColorResolvable) || '#aa55ff')
+      .setColor((config?.autoRoleEmbedColor || config?.embedColor || '#aa55ff') as ColorResolvable)
       .setTitle(config?.autoRoleEmbedTitle || `🎭 ${title}`)
       .setDescription(description)
       .setTimestamp();
 
-    // Handle thumbnail
-    if (config?.autoRoleEmbedThumbnail && !config.autoRoleEmbedThumbnail.includes('{user_avatar}')) {
-      embed.setThumbnail(config.autoRoleEmbedThumbnail);
+    // Handle thumbnail with fallback to general setting
+    const thumbnailUrl = config?.autoRoleEmbedThumbnail || config?.embedThumbnail;
+    if (thumbnailUrl && !thumbnailUrl.includes('{user_avatar}')) {
+      embed.setThumbnail(thumbnailUrl);
     }
 
     // Handle image
@@ -240,9 +249,10 @@ export class EmbedUtils {
       embed.setImage(config.autoRoleEmbedImage);
     }
 
-    // Handle footer
-    if (config?.autoRoleEmbedFooter) {
-      embed.setFooter({ text: config.autoRoleEmbedFooter });
+    // Handle footer with fallback to general setting
+    const footerText = config?.autoRoleEmbedFooter || config?.embedFooter;
+    if (footerText) {
+      embed.setFooter({ text: footerText });
     }
 
     return embed;

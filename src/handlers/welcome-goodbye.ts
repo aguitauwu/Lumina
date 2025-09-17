@@ -1,5 +1,6 @@
 import { GuildMember, TextChannel } from 'discord.js';
 import { ExtendedClient } from '../types/discord';
+import { EmbedUtils } from '../utils/embeds';
 
 export class WelcomeGoodbyeHandler {
   constructor(private client: ExtendedClient) {}
@@ -38,13 +39,25 @@ export class WelcomeGoodbyeHandler {
       const channel = member.guild.channels.cache.get(config.goodbyeChannelId) as TextChannel;
       if (!channel) return;
 
-      const message = this.replaceVariables(
+      const message = EmbedUtils.replaceVariables(
         config.goodbyeMessage || '👋 **{user}** se ha ido de **{server}**.',
-        member,
-        false // Don't mention for goodbye
+        member
       );
 
-      await channel.send(message);
+      // Check if farewell embeds are enabled
+      if (config.goodbyeEmbedEnabled !== false) {
+        const embed = EmbedUtils.farewell(
+          'Miembro se fue',
+          message,
+          config,
+          member
+        );
+
+        await channel.send({ embeds: [embed] });
+      } else {
+        // Send as plain text if embeds are disabled
+        await channel.send(message);
+      }
 
       this.client.logger.info(`Mensaje de despedida enviado para ${member.user.tag}`, {
         guildId: member.guild.id,
@@ -61,36 +74,23 @@ export class WelcomeGoodbyeHandler {
       const channel = member.guild.channels.cache.get(config.welcomeChannelId) as TextChannel;
       if (!channel) return;
 
-      const message = this.replaceVariables(
+      const message = EmbedUtils.replaceVariables(
         config.welcomeMessage || '¡Bienvenido {user} a **{server}**! 🎉',
-        member,
-        true
+        member
       );
 
-      // Create custom embed if embed settings are configured
-      if (config.embedColor && config.embedColor !== '#0099ff') {
-        const { EmbedBuilder } = await import('discord.js');
-        const embed = new EmbedBuilder()
-          .setColor(config.embedColor)
-          .setDescription(message)
-          .setTimestamp();
-
-        if (config.embedThumbnail) {
-          embed.setThumbnail(
-            config.embedThumbnail.includes('{user_avatar}') 
-              ? member.user.displayAvatarURL({ size: 256 })
-              : config.embedThumbnail
-          );
-        }
-
-        if (config.embedFooter) {
-          embed.setFooter({ 
-            text: this.replaceVariables(config.embedFooter, member, false)
-          });
-        }
+      // Check if welcome embeds are enabled
+      if (config.welcomeEmbedEnabled !== false) {
+        const embed = EmbedUtils.welcome(
+          'Nuevo Miembro',
+          message,
+          config,
+          member
+        );
 
         await channel.send({ embeds: [embed] });
       } else {
+        // Send as plain text if embeds are disabled
         await channel.send(message);
       }
 
@@ -106,32 +106,24 @@ export class WelcomeGoodbyeHandler {
 
   private async sendWelcomeDM(member: GuildMember, config: any) {
     try {
-      const message = this.replaceVariables(
+      const message = EmbedUtils.replaceVariables(
         config.welcomeDmMessage || 
         '¡Hola {user}! 👋\n\nBienvenido a **{server}**. Si tienes alguna pregunta, no dudes en contactar a los moderadores.',
-        member,
-        false // Don't mention in DM
+        member
       );
 
-      // Create custom embed for DM if configured
-      if (config.embedColor && config.embedColor !== '#0099ff') {
-        const { EmbedBuilder } = await import('discord.js');
-        const embed = new EmbedBuilder()
-          .setColor(config.embedColor)
-          .setTitle(`¡Bienvenido a ${member.guild.name}!`)
-          .setDescription(message)
-          .setTimestamp();
-
-        if (config.embedThumbnail) {
-          embed.setThumbnail(
-            config.embedThumbnail.includes('{user_avatar}') 
-              ? member.user.displayAvatarURL({ size: 256 })
-              : config.embedThumbnail
-          );
-        }
+      // Check if welcome embeds are enabled
+      if (config.welcomeEmbedEnabled !== false) {
+        const embed = EmbedUtils.welcome(
+          `¡Bienvenido a ${member.guild.name}!`,
+          message,
+          config,
+          member
+        );
 
         await member.send({ embeds: [embed] });
       } else {
+        // Send as plain text if embeds are disabled
         await member.send(message);
       }
 
