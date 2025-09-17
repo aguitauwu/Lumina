@@ -41,7 +41,8 @@ export class WelcomeGoodbyeHandler {
 
       const message = EmbedUtils.replaceVariables(
         config.goodbyeMessage || '👋 **{user}** se ha ido de **{server}**.',
-        member
+        member,
+        { mention: false } // Don't mention departed users
       );
 
       // Check if farewell embeds are enabled

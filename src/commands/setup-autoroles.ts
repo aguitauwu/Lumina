@@ -47,21 +47,21 @@ export async function execute(interaction: ChatInputCommandInteraction) {
     });
   }
 
-  // Create autoroles embed
-  const autoRolesEmbed = new EmbedBuilder()
-    .setColor('#0099ff')
-    .setTitle(title)
-    .setDescription(description)
-    .setTimestamp();
+  // Build autorole list for description
+  const rolesList = currentAutoRoles.map((autoRole: any) => 
+    `${autoRole.emoji} **${autoRole.roleName}** - ${autoRole.description || 'Sin descripción'}`
+  ).join('\n');
 
-  // Add fields for each autorole
-  for (const autoRole of currentAutoRoles) {
-    autoRolesEmbed.addFields({
-      name: `${autoRole.emoji} ${autoRole.roleName}`,
-      value: autoRole.description || 'Sin descripción',
-      inline: true
-    });
-  }
+  const fullDescription = `${description}\n\n${rolesList}`;
+
+  // Create autoroles embed using the new customization system
+  const autoRolesEmbed = config?.autoRoleEmbedEnabled !== false
+    ? EmbedUtils.autorole(title, fullDescription, config)
+    : new EmbedBuilder()
+        .setColor('#aa55ff')
+        .setTitle(title)
+        .setDescription(fullDescription)
+        .setTimestamp();
 
   // Send autoroles message
   const autoRolesChannel = interaction.guild!.channels.cache.get(channel.id) as any;

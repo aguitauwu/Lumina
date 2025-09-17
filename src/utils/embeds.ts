@@ -259,9 +259,10 @@ export class EmbedUtils {
   }
 
   // Helper method to replace variables in strings
-  static replaceVariables(text: string, member: GuildMember): string {
+  static replaceVariables(text: string, member: GuildMember, options: { mention?: boolean } = {}): string {
+    const mention = options.mention !== false; // Default to true unless explicitly false
     return text
-      .replace(/{user}/g, `<@${member.user.id}>`)
+      .replace(/{user}/g, mention ? `<@${member.user.id}>` : member.user.username)
       .replace(/{username}/g, member.user.username)
       .replace(/{server}/g, member.guild.name)
       .replace(/{member_count}/g, member.guild.memberCount.toString())
