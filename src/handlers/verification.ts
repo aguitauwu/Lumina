@@ -5,6 +5,73 @@ import { EmbedUtils } from '../utils/embeds';
 export class VerificationHandler {
   constructor(private client: ExtendedClient) {}
 
+  private async sendVerificationDM(member: GuildMember, config: any) {
+    try {
+      // Use custom DM message if configured, otherwise use default
+      const customMessage = config.verificationDmMessage || 
+        `Para acceder al servidor, debes verificarte en el canal de verificación.\n\n**Método de verificación:** ${config.verificationMethod}`;
+      
+      // Apply variable substitution
+      const processedMessage = EmbedUtils.replaceVariables(customMessage, member);
+      
+      // Check if DM embeds are enabled
+      if (config.verificationDmEmbedEnabled !== false) {
+        const embed = EmbedUtils.verificationDM(
+          `¡Bienvenido a ${member.guild.name}!`,
+          processedMessage,
+          config,
+          member
+        );
+        
+        await member.send({ embeds: [embed] });
+      } else {
+        // Send as plain text if embeds are disabled
+        await member.send(processedMessage);
+      }
+      
+      this.client.logger.info(`DM de verificación enviado a ${member.user.tag}`, {
+        guildId: member.guild.id,
+        userId: member.user.id
+      });
+      
+    } catch (error) {
+      this.client.logger.warn(`No se pudo enviar DM a ${member.user.tag}`, { error });
+    }
+  }
+
+  private async sendSuccessVerificationDM(member: GuildMember, config: any) {
+    try {
+      // Default success message
+      const defaultMessage = `¡Has sido verificado exitosamente en {server}! Ahora tienes acceso completo al servidor.`;
+      
+      // Apply variable substitution
+      const processedMessage = EmbedUtils.replaceVariables(defaultMessage, member);
+      
+      // Check if DM embeds are enabled
+      if (config.verificationDmEmbedEnabled !== false) {
+        const embed = EmbedUtils.verificationDM(
+          'Verificación Completada',
+          processedMessage,
+          config,
+          member
+        );
+        
+        await member.send({ embeds: [embed] });
+      } else {
+        // Send as plain text if embeds are disabled
+        await member.send(`✅ ${processedMessage}`);
+      }
+      
+      this.client.logger.info(`DM de confirmación de verificación enviado a ${member.user.tag}`, {
+        guildId: member.guild.id,
+        userId: member.user.id
+      });
+      
+    } catch (error) {
+      this.client.logger.warn(`No se pudo enviar DM de confirmación a ${member.user.tag}`, { error });
+    }
+  }
+
   async handleMemberJoin(member: GuildMember) {
     if (member.user.bot) return;
 
@@ -17,17 +84,7 @@ export class VerificationHandler {
       await this.client.db.logUserJoin(member.guild.id, member.user.id);
 
       // Send welcome DM with verification instructions
-      const embed = EmbedUtils.info(
-        `¡Bienvenido a ${member.guild.name}!`,
-        `Para acceder al servidor, debes verificarte en el canal de verificación.\n\n` +
-        `**Método de verificación:** ${config.verificationMethod}`
-      );
-
-      try {
-        await member.send({ embeds: [embed] });
-      } catch (error) {
-        this.client.logger.warn(`No se pudo enviar DM a ${member.user.tag}`, { error });
-      }
+      await this.sendVerificationDM(member, config);
 
       this.client.logger.info(`Nuevo usuario: ${member.user.tag} en ${member.guild.name}`, {
         guildId: member.guild.id,
@@ -82,16 +139,7 @@ export class VerificationHandler {
         });
 
         // Send success DM
-        const successEmbed = EmbedUtils.success(
-          'Verificación Completada',
-          `¡Has sido verificado exitosamente en ${guild.name}!`
-        );
-
-        try {
-          await user.send({ embeds: [successEmbed] });
-        } catch (error) {
-          this.client.logger.warn(`No se pudo enviar DM de confirmación a ${user.tag}`, { error });
-        }
+        await this.sendSuccessVerificationDM(member, config);
       }
 
     } catch (error) {
@@ -147,16 +195,7 @@ export class VerificationHandler {
         });
 
         // Send success DM
-        const successEmbed = EmbedUtils.success(
-          'Verificación Completada',
-          `¡Has sido verificado exitosamente en ${message.guild!.name}!`
-        );
-
-        try {
-          await message.author.send({ embeds: [successEmbed] });
-        } catch (error) {
-          this.client.logger.warn(`No se pudo enviar DM de confirmación a ${message.author.tag}`, { error });
-        }
+        await this.sendSuccessVerificationDM(member, config);
       }
 
     } catch (error) {
