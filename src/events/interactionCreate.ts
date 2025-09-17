@@ -42,10 +42,14 @@ export default {
         
         const errorMessage = '❌ Ocurrió un error al ejecutar este comando.';
         
-        if (interaction.replied || interaction.deferred) {
-          await interaction.followUp({ content: errorMessage, ephemeral: true });
-        } else {
-          await interaction.reply({ content: errorMessage, ephemeral: true });
+        try {
+          if (interaction.replied || interaction.deferred) {
+            await interaction.followUp({ content: errorMessage, ephemeral: true });
+          } else {
+            await interaction.reply({ content: errorMessage, ephemeral: true });
+          }
+        } catch (interactionError) {
+          client.logger.error('Error respondiendo a interacción expirada:', { interactionError });
         }
       }
     }

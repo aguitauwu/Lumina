@@ -26,6 +26,9 @@ export const data = new SlashCommandBuilder()
   .setDefaultMemberPermissions(PermissionFlagsBits.Administrator);
 
 export async function execute(interaction: ChatInputCommandInteraction) {
+  // Defer the reply immediately to prevent timeout
+  await interaction.deferReply({ ephemeral: true });
+
   const channel = interaction.options.getChannel('channel', true);
   const title = interaction.options.getString('title') || 'Selecciona tus roles';
   const description = interaction.options.getString('description') || 
@@ -36,12 +39,11 @@ export async function execute(interaction: ChatInputCommandInteraction) {
   const currentAutoRoles = config?.autoRoles || [];
 
   if (currentAutoRoles.length === 0) {
-    return interaction.reply({
+    return interaction.editReply({
       embeds: [EmbedUtils.warning(
         'Sin Autoroles Configurados',
         'Primero debes agregar autoroles usando `/add-autorole` antes de configurar el mensaje.'
-      )],
-      ephemeral: true
+      )]
     });
   }
 
@@ -87,5 +89,5 @@ export async function execute(interaction: ChatInputCommandInteraction) {
     `📝 ID del mensaje: ${sentMessage.id}`
   );
 
-  await interaction.reply({ embeds: [successEmbed], ephemeral: true });
+  await interaction.editReply({ embeds: [successEmbed] });
 }

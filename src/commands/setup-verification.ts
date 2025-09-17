@@ -46,6 +46,9 @@ export const data = new SlashCommandBuilder()
   .setDefaultMemberPermissions(PermissionFlagsBits.Administrator);
 
 export async function execute(interaction: ChatInputCommandInteraction) {
+  // Defer the reply immediately to prevent timeout
+  await interaction.deferReply({ ephemeral: true });
+
   const method = interaction.options.getString('method', true) as 'emoji' | 'keyword' | 'button';
   const channel = interaction.options.getChannel('channel', true);
   const role = interaction.options.getRole('role', true);
@@ -55,9 +58,8 @@ export async function execute(interaction: ChatInputCommandInteraction) {
 
   // Validations
   if (method === 'keyword' && !keyword) {
-    return interaction.reply({
-      embeds: [EmbedUtils.error('Error', 'Debes especificar una palabra clave para el método keyword')],
-      ephemeral: true
+    return interaction.editReply({
+      embeds: [EmbedUtils.error('Error', 'Debes especificar una palabra clave para el método keyword')]
     });
   }
 
@@ -132,5 +134,5 @@ export async function execute(interaction: ChatInputCommandInteraction) {
     (method === 'emoji' ? `😀 **Emoji:** ${emoji}\n` : '')
   );
 
-  await interaction.reply({ embeds: [successEmbed], ephemeral: true });
+  await interaction.editReply({ embeds: [successEmbed] });
 }
